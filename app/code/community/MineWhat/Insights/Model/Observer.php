@@ -24,7 +24,7 @@ class MineWhat_Insights_Model_Observer
 	    		foreach( $_selections as $selection )
 	    		{
 				$bundleItem = array();
-				$bundleItem['id'] = $selection->getId();
+				$bundleItem['pid'] = $selection->getId();
 				$bundleItem['sku'] = $selection->getSku();
 				$bundleItem['price'] = $selection->getPrice();
 				$bundle[] = $bundleItem;

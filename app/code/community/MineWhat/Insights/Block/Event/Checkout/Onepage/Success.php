@@ -44,7 +44,7 @@ class MineWhat_Insights_Block_Event_Checkout_Onepage_Success extends Mage_Core_B
 				if($orderInfo['items'][$item->getParentItemId()] != null) {
 					$bundleItems = $orderInfo['items'][$item->getParentItemId()]['bundle'];
 					$bundleItem = array(
-						'id' => $item->getProductId(),
+						'pid' => $item->getProductId(),
 					    	'sku' => $item->getSku(),
 					    	'qty' => $item->getQtyOrdered(),
 						'price' => $item->getPrice()
