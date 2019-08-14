@@ -9,7 +9,7 @@
 <?php if (($orderInfo = $this->getOrderInfo())): ?>
 <script type="text/javascript">
 //<![CDATA[
-	var _mwapi = _mwapi || [];.
+	var _mwapi = _mwapi || [];
 	<?php foreach ($orderInfo['items'] as $product): ?>
 		_mwapi.push(['trackEvent', 'buy', '<?php echo $product["id"] ?>', '<?php echo intval($product["qty"]) ?>', '<?php echo $product["sku"] ?>', '<?php echo $product["price"] ?>', '<?php echo json_encode($product["parentId"]) ?>', '<?php echo json_encode($product["bundle"]) ?>']);
 	<?php endforeach; ?>
