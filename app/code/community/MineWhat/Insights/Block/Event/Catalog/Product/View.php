@@ -21,10 +21,10 @@ class MineWhat_Insights_Block_Event_Catalog_Product_View extends Mage_Core_Block
 
 		if($_product->getTypeId() == "configurable") {
     			$conf = Mage::getModel('catalog/product_type_configurable')->setProduct($_product);
-    			$simple_collection = $conf->getUsedProductCollection()->addAttributeToSelect(Array('id', 'sku', 'price'))->addFilterByRequiredOptions();
+    			$simple_collection = $conf->getUsedProductCollection()->addAttributeToSelect(array('id', 'sku', 'price'))->addFilterByRequiredOptions();
     			return $simple_collection;			
 		} else {
-			return null;
+			return array();
 		}
 
 	}
