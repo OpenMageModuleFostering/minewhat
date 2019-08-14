@@ -7,55 +7,39 @@
  */
 ?>
 <?php $_product = $this->getCurrentProduct() ?>
-<?php if ($_product) { ?>
 <?php 
 	$_associated_products = $this->getAssociatedProducts($_product);
-	$associated_ids = array();
+	$associated_ids = Array();
+?>
+<script type="text/mwdata">
+//<![CDATA[	
+	var _mwdata = _mwdata || {};
+	
+	_mwdata['product'] = {};
+	_mwdata['product'].id = '<?php echo $_product->getId() ?>';
+	_mwdata['product'].sku = '<?php echo $_product->getSku() ?>';
+	_mwdata['product'].cat = '<?php echo json_encode($_product->getCategoryIds()) ?>';
+	_mwdata['product'].price = '<?php echo $_product->getPrice() ?>';	
+	
+	<?php if($_associated_products != null): ?>
+		_mwdata['associated_products'] = [];
+	<?php endif; ?>
 
-	$mwdata = array();
-	$mwdata['product'] = array();
-	$mwdata['associated_products'] = array();
-
-	$mwdata['product']['id'] = $_product->getId();
-	$mwdata['product']['sku'] = $_product->getSku();
-
-	$categories = $_product->getCategoryCollection()->addAttributeToSelect('name');
-
-	$mwdata['product']['cat'] = array();
-	foreach($categories as $category) {
-    		$mwdata['product']['cat'][] = $category->getName();
-	}
-
-	$mwdata['product']['price'] = $_product->getPrice();
-
-	foreach($_associated_products as $simple_product) {
-        	$product_info = array();
+	<?php foreach($_associated_products as $simple_product): 
+        	$product_info = Array();
 		$associated_ids[] = $simple_product->getId();
 		$product_info['id'] = $simple_product->getId();
 		$product_info['sku'] = $simple_product->getSku();
 		$product_info['price'] = $simple_product->getPrice();
-		$mwdata['associated_products'][] = $product_info;
-	}
-	
-?>
-<script type="text/mwdata">
-//<![CDATA[	
-
-	<?php
-		try { 
-			echo json_encode($mwdata);
-		} catch(Exception $exception) {
-
-		}
 	?>
-
+		_mwdata['associated_products'].push(<?php echo json_encode($product_info) ?>);
+	<?php endforeach; ?>
 //]]>	
 </script>
 
 <script type="text/javascript">
 //<![CDATA[
 	var _mwapi = _mwapi || [];
-	_mwapi.push(['trackEvent', 'product', {pid: '<?php echo $_product->getId() ?>', associated_ids: '<?php echo json_encode($associated_ids) ?>'}]);
+	_mwapi.push(['trackEvent', 'product', '<?php echo $_product->getId() ?>', '<?php echo json_encode($associated_ids) ?>']);
 //]]>
 </script>
-<?php } ?>

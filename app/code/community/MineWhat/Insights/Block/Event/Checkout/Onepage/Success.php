@@ -14,105 +14,72 @@ class MineWhat_Insights_Block_Event_Checkout_Onepage_Success extends Mage_Core_B
 	}
 
 	public function getOrderInfo() {
-		try {
-			$lastOrderId = Mage::getSingleton('checkout/session')->getLastOrderId();
+		$lastOrderId = Mage::getSingleton('checkout/session')->getLastOrderId();
 
-			$order = Mage::getSingleton('sales/order');
-			$order->load($lastOrderId);
+		$order = Mage::getSingleton('sales/order');
+		$order->load($lastOrderId);
 
+		
+		if ($order && $order->getId()) {
 
-			if ($order && $order->getId()) {
+		    $orderInfo['items'] = array();
 
-			    $orderInfo['items'] = array();
+		    $orderedItems = $order->getAllItems();
 
-			    $orderedItems = $order->getAllItems();
+		    foreach($orderedItems as $item) {
 
-			    foreach($orderedItems as $item) {
+			if($item->getProductType() == "bundle") {
 
-				if($item->getProductType() == "bundle") {
+				$orderInfo['items'][$item->getItemId()] = array(					   
+				    'id' => $item->getProductId(),
+				    'parentId' => [],
+				    'sku' => $item->getSku(),
+				    'qty' => $item->getQtyOrdered(),
+			     	    'price' => $item->getPrice(),
+				    'bundle' => array()
+				);
 
-					$orderInfo['items'][$item->getItemId()] = array(
+			} else if($item->getProductType() != "configurable") {
+
+				if($orderInfo['items'][$item->getParentItemId()] != null) {
+					$bundleItems = $orderInfo['items'][$item->getParentItemId()]['bundle'];
+					$bundleItem = array(
+						'id' => $item->getProductId(),
+					    	'sku' => $item->getSku(),
+					    	'qty' => $item->getQtyOrdered(),
+						'price' => $item->getPrice()
+					);
+					$bundleItems[] = $bundleItem;
+					$orderInfo['items'][$item->getParentItemId()]['bundle'] = $bundleItems;
+				
+				} else {
+
+					$orderInfo['items'][] = array(					   
 					    'id' => $item->getProductId(),
-					    'parentId' => '',
+					    'parentId' => Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($item->getProductId()),
 					    'sku' => $item->getSku(),
 					    'qty' => $item->getQtyOrdered(),
-				     	    'price' => $item->getPrice(),
+					    'price' => $item->getPrice(),
 					    'bundle' => array()
 					);
 
-				} else if($item->getProductType() != "configurable") {
-
-					if($orderInfo['items'][$item->getParentItemId()] != null) {
-						$bundleItems = $orderInfo['items'][$item->getParentItemId()]['bundle'];
-						$bundleItem = array(
-							'pid' => $item->getProductId(),
-						    	'sku' => $item->getSku(),
-						    	'qty' => $item->getQtyOrdered(),
-							'price' => $item->getPrice()
-						);
-						$bundleItems[] = $bundleItem;
-						$orderInfo['items'][$item->getParentItemId()]['bundle'] = $bundleItems;
-
-					} else {
-
-						$parentId = '';
-						$parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($item->getProductId());
-						if($parentIds != null && count($parentIds) > 0) {
-							$parentId = $parentIds[0];
-						}
-						$orderInfo['items'][] = array(
-							'id' => $item->getProductId(),
-							'parentId' => $parentId,
-							'sku' => $item->getSku(),
-							'qty' => $item->getQtyOrdered(),
-							'price' => $item->getPrice(),
-							'bundle' => array()
-						);
-
-
-					}
-
 				}
-
-			    }
-
-			    $orderInfo['orderId'] = $order->getIncrementId();
-	      		    $orderInfo['email'] = $order->getCustomerEmail();
-	      		    $orderInfo['createdAt'] = $order->getCreatedAt();
-
-			    $currency = $order->getOrderCurrency();
-	   		    if (is_object($currency)) {
-				$orderInfo['currency'] = $currency->getCurrencyCode();
-			    }
-			    $paymentMethod = $order->getPayment()->getMethodInstance()->getTitle();
-			    $orderInfo['paymentMethod'] = $paymentMethod;
-
-			    return $orderInfo;
+				
 			}
-		} catch (Exception $e) {}
-		
+
+		    }
+
+		    return $orderInfo;
+		}
 
 		return null;
 	}
 
 	protected function _toHtml() {
-		if (!$this->helper('minewhat_insights')->isModuleOutputEnabled() || !$this->isOrderConfirmation()) {
+		if (!$this->helper('minewhat_insights')->isModuleOutputEnabled()) {
 		    return '';
 		}
 		return parent::_toHtml();
-  	}
-
-	protected function isOrderConfirmation() {
-		return strpos($this->_getRouteName(), 'checkout') !== false
-	      	&& $this->_getActionName() == 'success';
-	}
-
-	protected function _getRouteName() {
-		return $this->getRequest()->getRequestedRouteName();
-	}
-
-	protected function _getActionName() {
-		return $this->getRequest()->getRequestedActionName();
-	}
+    	}
 
 }

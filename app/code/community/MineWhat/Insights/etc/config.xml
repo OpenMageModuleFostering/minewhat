@@ -31,15 +31,6 @@
         </helpers>
     </global>
     <frontend>
-        <routers>
-            <minewhat>
-                <use>standard</use>
-                <args>
-                    <module>MineWhat_Insights</module>
-                    <frontName>minewhat</frontName>
-                </args>
-            </minewhat>
-        </routers>
         <layout>
             <updates>
                 <minewhat_insights>
