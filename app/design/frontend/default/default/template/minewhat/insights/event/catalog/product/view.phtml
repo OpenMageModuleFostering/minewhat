@@ -1,0 +1,12 @@
+<?php
+/**
+ * @category    MineWhat
+ * @package     MineWhat_Insights
+ * @copyright   Copyright (c) MineWhat
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+<?php $_product = $this->getCurrentProduct() ?>
+<script type="text/javascript">
+	_mwapi.push(['trackEvent', 'product', '<?php echo $_product->getId() ?>']);
+</script>
