@@ -19,7 +19,7 @@ class MineWhat_Insights_Block_Event_Checkout_Onepage_Success extends Mage_Core_B
 		$order = Mage::getSingleton('sales/order');
 		$order->load($lastOrderId);
 
-		
+
 		if ($order && $order->getId()) {
 
 		    $orderInfo['items'] = array();
@@ -30,7 +30,7 @@ class MineWhat_Insights_Block_Event_Checkout_Onepage_Success extends Mage_Core_B
 
 			if($item->getProductType() == "bundle") {
 
-				$orderInfo['items'][$item->getItemId()] = array(					   
+				$orderInfo['items'][$item->getItemId()] = array(
 				    'id' => $item->getProductId(),
 				    'parentId' => '',
 				    'sku' => $item->getSku(),
@@ -51,7 +51,7 @@ class MineWhat_Insights_Block_Event_Checkout_Onepage_Success extends Mage_Core_B
 					);
 					$bundleItems[] = $bundleItem;
 					$orderInfo['items'][$item->getParentItemId()]['bundle'] = $bundleItems;
-				
+
 				} else {
 
 					$parentId = '';
@@ -70,7 +70,7 @@ class MineWhat_Insights_Block_Event_Checkout_Onepage_Success extends Mage_Core_B
 
 
 				}
-				
+
 			}
 
 		    }
@@ -93,10 +93,23 @@ class MineWhat_Insights_Block_Event_Checkout_Onepage_Success extends Mage_Core_B
 	}
 
 	protected function _toHtml() {
-		if (!$this->helper('minewhat_insights')->isModuleOutputEnabled()) {
+		if (!$this->helper('minewhat_insights')->isModuleOutputEnabled() || !$this->isOrderConfirmation()) {
 		    return '';
 		}
 		return parent::_toHtml();
-    	}
+  }
+
+  protected function isOrderConfirmation() {
+      return strpos($this->_getRouteName(), 'checkout') !== false
+              && $this->_getActionName() == 'success';
+  }
+
+  protected function _getRouteName() {
+      return $this->getRequest()->getRequestedRouteName();
+  }
+
+  protected function _getActionName() {
+      return $this->getRequest()->getRequestedActionName();
+  }
 
 }
