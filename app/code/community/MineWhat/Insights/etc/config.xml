@@ -29,6 +29,20 @@
                 <class>MineWhat_Insights_Helper</class>
             </minewhat_insights>
         </helpers>
+
+
+        <events>
+            <admin_system_config_changed_section_minewhat_insights>
+                <observers>
+                    <minewhat_insights_save_settings>
+                        <type>singleton</type>
+                        <class>minewhat_insights/observer</class>
+                        <method>onSaveSettings</method>
+                    </minewhat_insights_save_settings>
+                </observers>
+            </admin_system_config_changed_section_minewhat_insights>
+        </events>
+
     </global>
     <frontend>
         <routers>

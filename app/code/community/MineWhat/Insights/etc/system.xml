@@ -35,14 +35,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </active>
-                        <base_script translate="label">
-                            <label>Base Script</label>
-                            <frontend_type>textarea</frontend_type>
-                            <sort_order>20</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </base_script>
                         <api_key translate="label">
                             <label>Domain Key</label>
                             <frontend_type>text</frontend_type>
