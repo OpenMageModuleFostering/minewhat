@@ -9,7 +9,7 @@
 class MineWhat_Insights_Helper_Data extends Mage_Core_Helper_Data
 {
 
-    const CONFIG_ACTIVE = 'minewhat_insights/settings/active';
+    const CONFIG_ACTIVE = 'minewhat_insights/settings/active';    
     const CONFIG_BASE_SCRIPT = 'minewhat_insights/settings/base_script';
 
     public function isModuleEnabled($moduleName = null)

@@ -83,6 +83,8 @@ class MineWhat_Insights_Block_Event_Checkout_Onepage_Success extends Mage_Core_B
    		    if (is_object($currency)) {
 			$orderInfo['currency'] = $currency->getCurrencyCode();
 		    }
+		    $paymentMethod = $order->getPayment()->getMethodInstance()->getTitle();
+		    $orderInfo['paymentMethod'] = $paymentMethod;
 
 		    return $orderInfo;
 		}
