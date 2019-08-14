@@ -6,13 +6,13 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 ?>
-<?php if (($orderInfo = $this->getOrderInfo())): ?>
+<?php if (($orderInfo = $this->getOrderInfo())) { ?>
 <script type="text/javascript">
 //<![CDATA[
 	var _mwapi = _mwapi || [];
-	<?php foreach ($orderInfo['items'] as $product): ?>
+	<?php foreach ($orderInfo['items'] as $product) { ?>
 		_mwapi.push(['trackEvent', 'buy', '<?php echo $product["id"] ?>', '<?php echo intval($product["qty"]) ?>', '<?php echo $product["sku"] ?>', '<?php echo $product["price"] ?>', '<?php echo json_encode($product["parentId"]) ?>', '<?php echo json_encode($product["bundle"]) ?>']);
-	<?php endforeach; ?>
+	<?php } ?>
 //]]>
 </script>
-<?php endif; ?>
+<?php } ?>
