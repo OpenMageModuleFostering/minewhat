@@ -19,7 +19,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
         if(!$API_KEY && strlen($API_KEY) === 0) {
             // Api access disabled
             $this->getResponse()
-                    ->setBody(json_encode(array('status' => 'error', 'message' => 'API access disabled')))
+                    ->setBody(json_encode(array('status' => 'error', 'message' => 'API access disabled', 'version' => 2)))
                     ->setHttpResponseCode(403)
                     ->setHeader('Content-type', 'application/json', true);
             return false;
@@ -36,7 +36,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
             Mage::log('Unable to extract authorization header from request', null, 'minewhat.log');
             // Internal server error
             $this->getResponse()
-                   ->setBody(json_encode(array('status' => 'error', 'message' => 'Internal server error, Authorization header not found')))
+                   ->setBody(json_encode(array('status' => 'error', 'message' => 'Internal server error, Authorization header not found', 'version' => 2)))
                    ->setHttpResponseCode(500)
                    ->setHeader('Content-type', 'application/json', true);
             return false;
@@ -45,7 +45,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
         if(trim($authHeader) !== trim($API_KEY)) {
             // Api access denied
             $this->getResponse()
-                    ->setBody(json_encode(array('status' => 'error', 'message' => 'Api access denied')))
+                    ->setBody(json_encode(array('status' => 'error', 'message' => 'Api access denied', 'version' => 2)))
                     ->setHttpResponseCode(401)
                     ->setHeader('Content-type', 'application/json', true);
             return false;
@@ -109,6 +109,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
                   }
                 }
 
+                $responseObj['version'] = 2;
                 $this->getResponse()
                     ->setBody(json_encode($responseObj))
                     ->setHttpResponseCode(200)
@@ -140,7 +141,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
                 }
 
                 $this->getResponse()
-                    ->setBody(json_encode(array('orders' => $orders, 'fromDate' => $fromDate, 'toDate' => $toDate)))
+                    ->setBody(json_encode(array('orders' => $orders, 'fromDate' => $fromDate, 'toDate' => $toDate, 'version' => 2)))
                     ->setHttpResponseCode(200)
                     ->setHeader('Content-type', 'application/json', true);
 
@@ -148,7 +149,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
 
         } catch(Exception $e) {
             $this->getResponse()
-                ->setBody(json_encode(array('status' => 'error', 'message' => 'Internal server error')))
+                ->setBody(json_encode(array('status' => 'error', 'message' => 'Internal server error', 'version' => 2)))
                 ->setHttpResponseCode(500)
                 ->setHeader('Content-type', 'application/json', true);
         }
@@ -181,6 +182,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
 
             $extras = $this->getRequest()->getParam('extras');
             $debug = $this->getRequest()->getParam('debug', 'false') === 'true';
+
             if($extras && strlen($extras)) {
                 $extras = explode(',', $extras);
                 for($i = 0;$i < sizeof($extras);$i++) {
@@ -195,7 +197,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
 
                 $product = Mage::getModel('catalog/product')->load($productId);
 
-                $product = $this->getFormatedProduct($product, $extras, $debug);
+                $product = $this->getFormattedProduct($product, $extras, $debug);
                 if($product !== null) {
                     $products[] = $product;
                 }
@@ -212,7 +214,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
                 ;
 
                 foreach($productsCollection as $product) {
-                    $product = $this->getFormatedProduct($product, $extras, $debug);
+                    $product = $this->getFormattedProduct($product, $extras, $debug);
                     if($product !== null) {
                         $products[] = $product;
                     }
@@ -223,14 +225,91 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
             $currency = Mage::app()->getStore()->getCurrentCurrencyCode();
 
             $this->getResponse()
-                ->setBody(json_encode(array('products' => $products, 'currency' => $currency)))
+                ->setBody(json_encode(array('products' => $products, 'currency' => $currency, 'version' => 2)))
                 ->setHttpResponseCode(200)
                 ->setHeader('Content-type', 'application/json', true);
 
 
         } catch(Exception $e) {
             $this->getResponse()
-                ->setBody(json_encode(array('status' => 'error', 'message' => 'Internal server error')))
+                ->setBody(json_encode(array('status' => 'error', 'message' => 'Internal server error', 'version' => 2)))
+                ->setHttpResponseCode(500)
+                ->setHeader('Content-type', 'application/json', true);
+        }
+
+        return $this;
+
+    }
+
+
+    public function categoriesAction() {
+
+        try {
+
+            if(!$this->_authorise()) {
+                return $this;
+            }
+
+            $attributes = array(
+               'id',
+               'name',
+               'image',
+               'url',
+               'level',
+               'created_at',
+               'updated_at'
+            );
+
+            $sections = explode('/', trim($this->getRequest()->getPathInfo(), '/'));
+            $categories = array();
+
+            $level = $this->getRequest()->getParam('extras');
+            $debug = $this->getRequest()->getParam('debug', 'false') === 'true';
+
+            if($level && strlen($level)) {
+                $level = intval($level);
+            }
+
+            if(isset($sections[3])) {
+                // Looking for a specific category
+                $categoryId = $sections[3];
+
+                $category = Mage::getModel('catalog/category')->load($categoryId);
+
+                $category = $this->getFormattedCategory($category, $debug);
+                if($category !== null) {
+                    $categories[] = $category;
+                }
+
+            } else {
+                // Looking for a list of categories
+                $limit = $this->getRequest()->getParam('limit', 100);
+                $offset = $this->getRequest()->getParam('offset', 1);
+
+                $categoriesCollection = Mage::getModel('catalog/category')->getCollection();
+                $categoriesCollection
+                ->addAttributeToSelect($attributes)
+                ->getSelect()->limit($limit, $offset)   //we can specify how many categories we want to show on this page
+                ;
+
+                foreach($categoriesCollection as $category) {
+                    $category = $this->getFormattedCategory($category, $debug);
+                    if($category !== null) {
+                        $categories[] = $category;
+                    }
+                }
+
+            }
+
+            $this->getResponse()
+                ->setBody(json_encode(array('categories' => $categories, 'version' => 2)))
+                ->setHttpResponseCode(200)
+                ->setHeader('Content-type', 'application/json', true);
+
+
+        } catch(Exception $e) {
+            $this->getResponse()
+                ->setBody(json_encode(array('status' => 'error', 'message' => 'Internal server error', 'version' => 2)))
                 ->setHttpResponseCode(500)
                 ->setHeader('Content-type', 'application/json', true);
         }
@@ -255,7 +334,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
            if(!$productId || strlen($productId) <= 0) {
 
                $this->getResponse()
-               ->setBody(json_encode(array('status' => 'error', 'message' => 'product id required')))
+               ->setBody(json_encode(array('status' => 'error', 'message' => 'product id required', 'version' => 2)))
                ->setHttpResponseCode(500)
                ->setHeader('Content-type', 'application/json', true);
 
@@ -266,7 +345,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
                  $product = Mage::getModel('catalog/product')->loadByAttribute('sku', $productId);
                  if($product == null) {
                     $this->getResponse()
-                      ->setBody(json_encode(array('status' => 'error', 'message' => 'invalid sku')))
+                      ->setBody(json_encode(array('status' => 'error', 'message' => 'invalid sku', 'version' => 2)))
                       ->setHttpResponseCode(500)
                       ->setHeader('Content-type', 'application/json', true);
                       return $this;
@@ -280,7 +359,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
                $stock = $stockObj->getQty();
 
                $this->getResponse()
-                   ->setBody(json_encode(array('id' => $productId, 'stock' => $stock)))
+                   ->setBody(json_encode(array('id' => $productId, 'stock' => $stock, 'version' => 2)))
                    ->setHttpResponseCode(200)
                    ->setHeader('Content-type', 'application/json', true);
 
@@ -288,7 +367,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
 
        } catch(Exception $e) {
            $this->getResponse()
-               ->setBody(json_encode(array('status' => 'error', 'message' => 'Internal server error')))
+               ->setBody(json_encode(array('status' => 'error', 'message' => 'Internal server error', 'version' => 2)))
                ->setHttpResponseCode(500)
                ->setHeader('Content-type', 'application/json', true);
        }
@@ -298,12 +377,12 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
     }
 
 
-    private function getFormatedProduct($product, $extras, $debug) {
+    private function getFormattedProduct($product, $extras, $debug) {
 
-        $formatedProduct = null;
+        $formattedProduct = null;
 
         try {
-            $formatedProduct = array(
+            $formattedProduct = array(
                 'id'            =>  $product->getId(),
                 'sku'           =>  $product->getSku(),
                 'name'          =>  $product->getName(),
@@ -316,43 +395,75 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
                 'url'           =>  $product->getProductUrl(),
                 'info'          =>  $product->getShortDescription(),
                 'status'        =>  $product->getStatus(),
-		            'type'		      =>  $product->getTypeId(),
-                'created_at'		=>  $product->getCreatedAt(),
-                'updated_at'		=>  $product->getUpdatedAt()
+                'type'          =>  $product->getTypeId(),
+                'created_at'    =>  $product->getCreatedAt(),
+                'updated_at'    =>  $product->getUpdatedAt()
             );
-            if(!$formatedProduct['manufacturer'] || strlen($formatedProduct['manufacturer']) === 0) {
+            if(!$formattedProduct['manufacturer'] || strlen($formattedProduct['manufacturer']) === 0) {
                 $product = Mage::getModel('catalog/product')->load($product->getId());
-                $formatedProduct['manufacturer'] = $product->getAttributeText('manufacturer');
+                $formattedProduct['manufacturer'] = $product->getAttributeText('manufacturer');
             }
 
-	          if($formatedProduct['type'] == "configurable") {
+            if($formattedProduct['type'] == "configurable") {
                // get associated product ids
-               $associatedProducts = Mage::getModel('catalog/product_type_configurable')->getChildrenIds($formatedProduct['id']);
-               $formatedProduct['associated_products'] = $associatedProducts;
+               $associatedProducts = Mage::getModel('catalog/product_type_configurable')->getChildrenIds($formattedProduct['id']);
+               $formattedProduct['associated_products'] = $associatedProducts;
             }
 
             // get stock info
             $stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
-            $formatedProduct['stock'] = $stock->getQty();
+            $formattedProduct['stock'] = $stock->getQty();
 
             if($debug) {
                 $attributes = $product->getAttributes();
                 foreach($attributes as $key => $value) {
-                    $formatedProduct['extras'][$key] = $product->getAttributeText($key);
+                    $formattedProduct['extras'][$key] = $product->getAttributeText($key);
                 }
             } else {
                 foreach($extras as $key) {
-                    $formatedProduct['extras'][$key] = $product->getAttributeText($key);
+                    $formattedProduct['extras'][$key] = $product->getAttributeText($key);
                 }
             }
 
-            $categories = $product->getCategoryCollection()->addAttributeToSelect('name');
+            $categories = $product->getCategoryCollection()
+                            ->addAttributeToSelect('id')
+                            ->addAttributeToSelect('name')
+                            ->addAttributeToSelect('path')
+                            ->addAttributeToSelect('level');
             foreach($categories as $category) {
-                $formatedProduct['cat'][] = $category->getName();
+                $formattedCategory = array();
+                $formattedCategory['id'] = $category->getId();
+                $formattedCategory['name'] = $category->getName();
+                $formattedCategory['level'] = $category->getLevel();
+                $formattedCategory['path'] = $category->getPath();
+                $formattedProduct['cat'][$formattedCategory['id']] = $formattedCategory;
             }
+
         } catch(Exception $e) {}
 
-        return $formatedProduct;
+        return $formattedProduct;
+
+    }
+
+    private function getFormattedCategory($category, $extras, $debug) {
+
+        $formattedCategory = null;
+
+        try {
+
+                $formattedCategory = array(
+                    'id'            =>  $category->getId(),
+                    'name'          =>  $category->getName(),
+                    'image'         =>  $category->getImageUrl(),
+                    'url'           =>  $category->getUrl(),
+                    'level'         =>  $category->getLevel(),
+                    'created_at'    =>  $category->getCreatedAt(),
+                    'updated_at'    =>  $category->getUpdatedAt()
+                );
+
+        } catch(Exception $e) {}
+
+        return $formattedCategory;
 
     }
 
