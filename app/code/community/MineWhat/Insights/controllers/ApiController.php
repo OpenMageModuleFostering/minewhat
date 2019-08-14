@@ -256,6 +256,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
                'image',
                'url',
                'level',
+               'path',
                'is_active',
                'created_at',
                'updated_at'
@@ -473,6 +474,7 @@ class MineWhat_Insights_ApiController extends Mage_Core_Controller_Front_Action 
                     'image'         =>  $category->getImageUrl(),
                     'url'           =>  $category->getUrl(),
                     'level'         =>  $category->getLevel(),
+                    'path'         =>  $category->getPath(),
                     'is_active'         =>  $category->getIsActive(),
                     'created_at'    =>  $category->getCreatedAt(),
                     'updated_at'    =>  $category->getUpdatedAt()
