@@ -17,6 +17,18 @@ class MineWhat_Insights_Block_Event_Catalog_Product_View extends Mage_Core_Block
 		return Mage::registry('current_product');
 	}
 
+	public function getAssociatedProducts($_product) {
+
+		if($_product->getTypeId() == "configurable") {
+    			$conf = Mage::getModel('catalog/product_type_configurable')->setProduct($_product);
+    			$simple_collection = $conf->getUsedProductCollection()->addAttributeToSelect(array('id', 'sku', 'price'))->addFilterByRequiredOptions();
+    			return $simple_collection;			
+		} else {
+			return array();
+		}
+
+	}
+
 	protected function _toHtml() {
 		if (!$this->helper('minewhat_insights')->isModuleOutputEnabled()) {
 		    return '';

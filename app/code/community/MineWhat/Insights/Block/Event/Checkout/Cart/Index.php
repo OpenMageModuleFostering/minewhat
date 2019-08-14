@@ -15,6 +15,7 @@ class MineWhat_Insights_Block_Event_Checkout_Cart_Index extends Mage_Core_Block_
 
 	public function getProductToShoppingCart() {
 		if (($product = Mage::getModel('core/session')->getProductToShoppingCart())) {
+			    Mage::getModel('core/session')->unsProductToShoppingCart();
 			    return $product;
 		}
 

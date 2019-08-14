@@ -10,19 +10,19 @@
 <layout version="0.1.0">
     
 	<catalog_product_view>
-		<reference name="before_head_end">
+		<reference name="head">
 		    	<block type="minewhat_insights/event_catalog_product_view" name="minewhat_insights_event_catalog_product_view" />
 		</reference>
 	</catalog_product_view>
 
 	<checkout_cart_index>
-		<reference name="before_head_end">
+		<reference name="head">
 		    	<block type="minewhat_insights/event_checkout_cart_index" name="minewhat_insights_event_checkout_cart_index" />
 		</reference>
 	</checkout_cart_index>
 
 	<checkout_onepage_success>
-		<reference name="before_head_end">
+		<reference name="head">
 		    	<block type="minewhat_insights/event_checkout_onepage_success" name="minewhat_insights_event_checkout_onepage_success" />
 		</reference>
 	</checkout_onepage_success>

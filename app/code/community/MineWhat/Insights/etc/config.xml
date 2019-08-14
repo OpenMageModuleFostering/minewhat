@@ -39,14 +39,15 @@
             </updates>
         </layout>
         <events>
-            <controller_action_predispatch_checkout_cart_add>
+            <checkout_cart_product_add_after>
                 <observers>
                     <minewhat_insights_log_cart_add>
+                        <type>singleton</type>
                         <class>minewhat_insights/observer</class>
                         <method>logCartAdd</method>
                     </minewhat_insights_log_cart_add>
                 </observers>
-            </controller_action_predispatch_checkout_cart_add>
+            </checkout_cart_product_add_after> 
         </events>
     </frontend>
     <default>
