@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
     <name>minewhat</name>
-    <version>1.0.11</version>
+    <version>1.0.12</version>
     <stability>stable</stability>
     <license uri="http://opensource.org/licenses/osl-3.0.php">osl</license>
     <channel>community</channel>
@@ -10,8 +10,8 @@
     <description>MineWhat Insights</description>
     <notes>MineWhat magento plugin</notes>
     <authors><author><name>MineWhat Inc.</name><user>MineWhat</user><email>plugins@minewhat.com</email></author></authors>
-    <date>2014-08-28</date>
-    <time>15:40:38</time>
+    <date>2014-09-06</date>
+    <time>17:40:38</time>
     <contents><target name="magecommunity"><dir name="MineWhat"><dir name="Insights"><dir name="Block"><dir name="Base"><file name="Script.php" hash="4af0a2e100d9d33f99125a0a6e64421b"/></dir><dir name="Event"><dir name="Catalog"><dir name="Product"><file name="View.php" hash="e1f3e3e9172a1c42d520f4dd870b54b2"/></dir></dir><dir name="Checkout"><dir name="Cart"><file name="Index.php" hash="fafaf6953262ea2b0bc3092d538c30d1"/></dir><dir name="Onepage"><file name="Success.php" hash="0c314455071a35d765f8447ac7df6a44"/></dir></dir></dir></dir><dir name="Helper"><file name="Data.php" hash="f55be36b0f6e46f0fccd3a2dee670ec3"/></dir><dir name="Model"><file name="Observer.php" hash="509eb21a74d2693e0aa24d7acd039aae"/></dir><dir name="etc"><file name="adminhtml.xml" hash="f1fb655aac4dc7f71cadb6c7a7e816f8"/><file name="config.xml" hash="dfb8144831b6cee45bba4167076eb266"/><file name="system.xml" hash="75d5165628b2b748a985db0aef1e505d"/></dir></dir></dir></target><target name="magedesign"><dir name="frontend"><dir name="default"><dir name="default"><dir name="layout"><file name="minewhat_insights.xml" hash="81061e0839af5d4f44ca0e4ae5383ab2"/></dir><dir name="template"><dir name="minewhat"><dir name="insights"><dir name="base"><file name="script.phtml" hash="a6b4ecb06d6c40b402ad619425d4493d"/></dir><dir name="event"><dir name="catalog"><dir name="product"><file name="view.phtml" hash="4f4f45eb87b55cf2de64188fcac7f13b"/></dir></dir><dir name="checkout"><dir name="cart"><file name="index.phtml" hash="63393e384b3e8b8f76ccc74fc4db5dec"/></dir><dir name="onepage"><file name="success.phtml" hash="4614dfe802afe6e73b8707b536071912"/></dir></dir></dir></dir></dir></dir></dir></dir><dir name="base"><dir name="default"><dir name="layout"><file name="minewhat_insights.xml" hash="81061e0839af5d4f44ca0e4ae5383ab2"/></dir><dir name="template"><dir name="minewhat"><dir name="insights"><dir name="base"><file name="script.phtml" hash="a6b4ecb06d6c40b402ad619425d4493d"/></dir><dir name="event"><dir name="catalog"><dir name="product"><file name="view.phtml" hash="4f4f45eb87b55cf2de64188fcac7f13b"/></dir></dir><dir name="checkout"><dir name="cart"><file name="index.phtml" hash="63393e384b3e8b8f76ccc74fc4db5dec"/></dir><dir name="onepage"><file name="success.phtml" hash="4614dfe802afe6e73b8707b536071912"/></dir></dir></dir></dir></dir></dir></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="MineWhat_Insights.xml" hash="8d2f076cbfcc14688ed800f622869d4b"/></dir></target></contents>
     <compatible/>
     <dependencies><required><php><min>5.2.5</min><max>6.0.0</max></php></required></dependencies>
