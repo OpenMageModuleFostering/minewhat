@@ -43,6 +43,7 @@ class MineWhat_Insights_Model_Observer
 				'id' => $id,
 				'sku' => $product->getSku(),
 				'parentId' => $parentId,
+				'qty' => $product->getQty(),
 				'bundle' => $bundle
 			)
 		);

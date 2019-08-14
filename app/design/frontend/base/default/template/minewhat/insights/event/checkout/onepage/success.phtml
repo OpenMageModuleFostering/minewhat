@@ -10,9 +10,11 @@
 <script type="text/javascript">
 //<![CDATA[
 	var _mwapi = _mwapi || [];
+	var data [];
 	<?php foreach ($orderInfo['items'] as $product) { ?>
-		_mwapi.push(['trackEvent', 'buy', '<?php echo $product["id"] ?>', '<?php echo intval($product["qty"]) ?>', '<?php echo $product["sku"] ?>', '<?php echo $product["price"] ?>', '<?php echo $product["parentId"] ?>', '<?php echo json_encode($product["bundle"]) ?>']);
+		data.push({_id: '<?php echo $product["id"] ?>', qty: '<?php echo intval($product["qty"]) ?>', sku: '<?php echo $product["sku"] ?>', price: '<?php echo $product["price"] ?>', parentId: '<?php echo $product["parentId"] ?>', bundle: '<?php echo json_encode($product["bundle"]) ?>'});
 	<?php } ?>
+  	_mwapi.push(['trackEvent', 'buy', 'mwdirect', data]);
 //]]>
 </script>
 <?php } ?>
