@@ -75,6 +75,10 @@ class MineWhat_Insights_Block_Event_Checkout_Onepage_Success extends Mage_Core_B
 
 		    }
 
+		    $orderInfo['orderId'] = $lastOrderId;
+      		    $orderInfo['email'] = $order->getCustomerEmail();
+      		    $orderInfo['createdAt'] = $order->getCreatedAt();
+
 		    return $orderInfo;
 		}
 

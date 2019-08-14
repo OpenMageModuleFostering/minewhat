@@ -55,7 +55,7 @@
 <script type="text/javascript">
 //<![CDATA[
 	var _mwapi = _mwapi || [];
-	_mwapi.push(['trackEvent', 'product', '<?php echo $_product->getId() ?>', '<?php echo json_encode($associated_ids) ?>']);
+	_mwapi.push(['trackEvent', 'product', {pid: '<?php echo $_product->getId() ?>', associated_ids: '<?php echo json_encode($associated_ids) ?>'}]);
 //]]>
 </script>
 <?php } ?>
