@@ -32,7 +32,7 @@ class MineWhat_Insights_Block_Event_Checkout_Onepage_Success extends Mage_Core_B
 
 				$orderInfo['items'][$item->getItemId()] = array(					   
 				    'id' => $item->getProductId(),
-				    'parentId' => array(),
+				    'parentId' => '',
 				    'sku' => $item->getSku(),
 				    'qty' => $item->getQtyOrdered(),
 			     	    'price' => $item->getPrice(),
@@ -54,14 +54,20 @@ class MineWhat_Insights_Block_Event_Checkout_Onepage_Success extends Mage_Core_B
 				
 				} else {
 
-					$orderInfo['items'][] = array(					   
-					    'id' => $item->getProductId(),
-					    'parentId' => Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($item->getProductId()),
-					    'sku' => $item->getSku(),
-					    'qty' => $item->getQtyOrdered(),
-					    'price' => $item->getPrice(),
-					    'bundle' => array()
+					$parentId = '';
+					$parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($item->getProductId());
+					if($parentIds != null && count($parentIds) > 0) {
+						$parentId = $parentIds[0];
+					}
+					$orderInfo['items'][] = array(
+						'id' => $item->getProductId(),
+						'parentId' => $parentId,
+						'sku' => $item->getSku(),
+						'qty' => $item->getQtyOrdered(),
+						'price' => $item->getPrice(),
+						'bundle' => array()
 					);
+
 
 				}
 				

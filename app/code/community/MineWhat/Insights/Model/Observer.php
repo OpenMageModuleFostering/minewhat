@@ -33,14 +33,19 @@ class MineWhat_Insights_Model_Observer
 
 	}
         
-        Mage::getModel('core/session')->setProductToShoppingCart(
-            array(
-                'id' => $id,
-		'sku' => $product->getSku(),
-		'parentId' => Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($id),
-		'bundle' => $bundle
-            )
-        );
+		$parentId = '';
+		$parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($id);
+		if($parentIds != null && count($parentIds) > 0) {
+			$parentId = $parentIds[0];
+		}
+		Mage::getModel('core/session')->setProductToShoppingCart(
+			array(
+				'id' => $id,
+				'sku' => $product->getSku(),
+				'parentId' => $parentId,
+				'bundle' => $bundle
+			)
+		);
 
     }
 }

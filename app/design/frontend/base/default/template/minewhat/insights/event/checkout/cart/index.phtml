@@ -11,7 +11,7 @@
 <script type="text/javascript">
 //<![CDATA[
 	var _mwapi = _mwapi || [];
-    	_mwapi.push(['trackEvent', 'cart', '<?php echo $_product["id"] ?>', '<?php echo $_product["sku"] ?>', '<?php echo json_encode($_product["parentId"]) ?>', '<?php echo json_encode($_product["bundle"]) ?>']);
+    	_mwapi.push(['trackEvent', 'addtocart', '<?php echo $_product["id"] ?>', '<?php echo $_product["sku"] ?>', '<?php echo $_product["parentId"] ?>', '<?php echo json_encode($_product["bundle"]) ?>']);
 //]]>
 </script>
 <?php } ?>
