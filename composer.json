@@ -1,16 +1,19 @@
 {
-    "name": "OpenMageModuleFostering/minewhat",
+    "name": "OpenMageModuleFostering\/minewhat",
     "type": "magento-module",
     "license": "osl",
     "homepage": "",
     "description": "MineWhat Insights",
     "authors": [
-    {
-        "name": "MineWhat Inc.",
-        "email": "plugins@minewhat.com"
-    }
-],
+        {
+            "name": "MineWhat Inc.",
+            "email": "plugins@minewhat.com"
+        }
+    ],
     "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+        "magento-hackathon\/magento-composer-installer": "*"
+    },
+    "keywords": [
+        "openmage-module"
+    ]
 }
